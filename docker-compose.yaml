@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+
+  mysql_container:
+    image: mysql:8.0.33
+    container_name: mysql_container
+    networks:
+      - spring_app-mysql_network
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD : yes
+      MYSQL_DATABASE: Mydatabase
+
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./dbdata:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin_container
+    networks:
+      - spring_app-mysql_network
+    links:
+      - mysql_container
+    environment:
+      PMA_HOST: mysql_container
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - "8082:80"
+
+  spring-boot-container: 
+    networks:
+      - spring_app-mysql_network
+    image: spring-boot-image
+    container_name: spring-boot-container
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql_container
+    environment:
+      - spring.datasource.url =jdbc:mysql://mysql_container:3306/Mydatabase?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&createDatabaseIfNotExist=true
+networks:
+  spring_app-mysql_network:   
+
+      
