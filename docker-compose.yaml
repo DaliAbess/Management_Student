@@ -31,7 +31,7 @@ services:
     image: mysql:8.0.33
     container_name: mysql_container
     networks:
-      - spring_app-mysql_network
+      - monitoring
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD : yes
       MYSQL_DATABASE: Mydatabase
@@ -45,7 +45,7 @@ services:
     image: phpmyadmin
     container_name: phpmyadmin_container
     networks:
-      - spring_app-mysql_network
+      - monitoring
     links:
       - mysql_container
     environment:
@@ -58,7 +58,7 @@ services:
 #######################################################################################################
   spring-boot-container: 
     networks:
-      - spring_app-mysql_network
+      - monitoring
     image: spring-boot-image
     container_name: spring-boot-container
     ports:
@@ -92,6 +92,6 @@ services:
       - monitoring
 ###################################################################################################
 networks:
-  spring_app-mysql_network:   
+  monitoring:   
 
       
